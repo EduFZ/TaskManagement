@@ -1,24 +1,24 @@
-package br.com.company.taskManagement.model;
+package br.com.company.taskManagement.dto;
 
+import br.com.company.taskManagement.entity.Items;
 import br.com.company.taskManagement.enums.Priority;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Items {
+public class ListsDto {
 
-    @Id
-    private Long id;
     private String title;
     private String description;
+    private List<ItemsDto> itemsDto;
     private LocalDateTime creationDate;
-    private Priority priority = Priority.NORMAL;
+    private Priority priority;
+
 }

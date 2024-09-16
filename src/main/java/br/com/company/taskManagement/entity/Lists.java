@@ -1,9 +1,7 @@
-package br.com.company.taskManagement.model;
+package br.com.company.taskManagement.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import org.springframework.data.annotation.Id;
+import br.com.company.taskManagement.enums.Priority;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -23,7 +21,11 @@ public class Lists {
     private Long id;
     private String title;
     private String description;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "list_id")
     private List<Items> items;
     private LocalDateTime creationDate;
+    @Enumerated(EnumType.STRING)
+    private Priority priority = Priority.NORMAL;
 
 }
