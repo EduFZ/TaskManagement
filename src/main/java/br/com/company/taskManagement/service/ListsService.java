@@ -35,12 +35,12 @@ public class ListsService {
         return listsRepository.findByFilters(priority,creationDate, title, pageable);
     }
 
-    public Lists createLists(ListsDto listsDto) {
-        Lists lists = new Lists();
+    public Lists createLists(ListsDto listsDto) throws ExceptionMessage {
+        Lists lists;
         if (TitleSizeValidation.isMinTitleSize(listsDto.getTitle()) && TitleSizeValidation.isMaxTitleSize(listsDto.getTitle())) {
             lists = listsDtoToLists(listsDto);
         } else {
-            new ExceptionMessage("O título deve ser maior ou igual à 6 caracteres e até 20 caracteres");
+            throw new ExceptionMessage("O título deve ser maior ou igual à 6 caracteres e até 20 caracteres");
         }
         return listsRepository.save(lists);
     }
@@ -50,7 +50,7 @@ public class ListsService {
         if (TitleSizeValidation.isMinTitleSize(listsDto.getTitle()) && TitleSizeValidation.isMaxTitleSize(listsDto.getTitle())) {
             existingLists.setTitle(listsDto.getTitle());
         } else {
-            new ExceptionMessage("O título deve ser maior ou igual à 6 caracteres e até 20 caracteres");
+           throw new ExceptionMessage("O título deve ser maior ou igual à 6 caracteres e até 20 caracteres");
         }
         existingLists.setDescription(listsDto.getDescription());
         existingLists.setCreationDate(listsDto.getCreationDate());
@@ -64,8 +64,12 @@ public class ListsService {
         listsRepository.deleteById(id);
     }
 
-    public void delete(Lists lists) {
-        listsRepository.delete(lists);
+    public void delete(Long id, Lists lists) throws ExceptionMessage {
+        Lists list = listsRepository.findById(id).orElse(null);
+        if (list != null)
+            listsRepository.delete(lists);
+
+        else throw new ExceptionMessage("Lista não encontrada para ser deletada");
     }
 
     private Lists listsDtoToLists(ListsDto listsDto) {
