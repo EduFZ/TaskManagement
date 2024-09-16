@@ -17,7 +17,9 @@ public interface ListsRepository  extends JpaRepository<Lists, Long> {
 
     @Query("SELECT f FROM Lists f WHERE (:priority IS NULL OR f.priority = :priority) " +
             "AND (:creationDate IS NULL OR f.creationDate = :creationDate) " +
-            "AND (:title IS NULL OR f.title = :title LIKE %:title%)")
+            "AND (:finishDate IS NULL OR f.finishDate = :finishDate)" +
+            "AND (:title IS NULL OR f.title = :title LIKE %:title%)" +
+            "AND (:creationDate IS NULL OR :finishDate IS NULL OR f.creationDate BETWEEN :creationDate AND :finishDate)")
     Page<Lists> findByFilters(@Param("priority") Priority priority, @Param("creationDate")LocalDateTime creationDate,
-            @Param("title") String title, Pageable pageable);
+            @Param("finishDate") LocalDateTime finishDate, @Param("title") String title, Pageable pageable);
 }

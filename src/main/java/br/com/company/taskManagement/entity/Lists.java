@@ -25,6 +25,7 @@ public class Lists {
     @JoinColumn(name = "list_id")
     private List<Items> items;
     private LocalDateTime creationDate;
+    private LocalDateTime finishDate;
     @Enumerated(EnumType.STRING)
     private Priority priority = Priority.NORMAL;
 

@@ -19,6 +19,7 @@ public class ListsDto {
     private String description;
     private List<ItemsDto> itemsDto;
     private LocalDateTime creationDate;
+    private LocalDateTime finishDate;
     private Priority priority;
 
 }

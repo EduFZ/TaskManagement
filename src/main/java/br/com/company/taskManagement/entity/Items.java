@@ -20,6 +20,7 @@ public class Items {
     private String title;
     private String description;
     private LocalDateTime creationDate;
+    private LocalDateTime finishDate;
     @Enumerated(EnumType.STRING)
     private Priority priority = Priority.NORMAL;
 

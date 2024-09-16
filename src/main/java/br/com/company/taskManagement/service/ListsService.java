@@ -31,8 +31,8 @@ public class ListsService {
         return listsRepository.findAll(pageable);
     }
 
-    public Page<Lists> findByFilters(Priority priority, LocalDateTime creationDate, String title, Pageable pageable) {
-        return listsRepository.findByFilters(priority,creationDate, title, pageable);
+    public Page<Lists> findByFilters(Priority priority, LocalDateTime creationDate, LocalDateTime finishDate, String title, Pageable pageable) {
+        return listsRepository.findByFilters(priority,creationDate, finishDate, title, pageable);
     }
 
     public Lists createLists(ListsDto listsDto) throws ExceptionMessage {
@@ -54,6 +54,7 @@ public class ListsService {
         }
         existingLists.setDescription(listsDto.getDescription());
         existingLists.setCreationDate(listsDto.getCreationDate());
+        existingLists.setFinishDate(listsDto.getFinishDate());
         existingLists.setItems(itemsDtoListToItemsList(listsDto.getItemsDto()));
         existingLists.setPriority(listsDto.getPriority());
 
@@ -69,7 +70,7 @@ public class ListsService {
         if (list != null)
             listsRepository.delete(lists);
 
-        else throw new ExceptionMessage("Lista não encontrada para ser deletada");
+        else throw new ExceptionMessage("Lista não encontrada para ser deletada!");
     }
 
     private Lists listsDtoToLists(ListsDto listsDto) {
@@ -78,6 +79,7 @@ public class ListsService {
                 .description(listsDto.getDescription())
                 .items(itemsDtoListToItemsList(listsDto.getItemsDto()))
                 .creationDate(listsDto.getCreationDate() != null ? listsDto.getCreationDate() : LocalDateTime.now())
+                .finishDate(listsDto.getFinishDate() != null ? listsDto.getFinishDate() : null)
                 .priority(listsDto.getPriority() != null ? listsDto.getPriority() : Priority.NORMAL)
                 .build();
     }

@@ -16,6 +16,7 @@ public class ItemsDto {
     private String title;
     private String description;
     private LocalDateTime creationDate;
+    private LocalDateTime finishDate;
     private Priority priority;
 
 }
