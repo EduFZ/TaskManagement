@@ -8,6 +8,7 @@ import br.com.company.taskManagement.service.ListsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class ListsController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<Lists>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<Lists>> findAll(@PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(listsService.findAll(pageable));
     }
 
@@ -35,7 +36,7 @@ public class ListsController {
     public ResponseEntity<Page<Lists>> findByFilters(@RequestParam(required = false) Priority priority,
                                                      @RequestParam(required = false)LocalDateTime creationDate,
                                                      @RequestParam(required = false)LocalDateTime finishDate,
-                                                     @RequestParam(required = false) String title, Pageable pageable) {
+                                                     @RequestParam(required = false) String title, @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(listsService.findByFilters(priority, creationDate, finishDate, title, pageable));
     }
 
