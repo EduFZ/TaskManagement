@@ -15,11 +15,10 @@ import java.time.LocalDateTime;
 public interface ListsRepository  extends JpaRepository<Lists, Long> {
     Page<Lists> findAll(Pageable pageable);
 
-    @Query("SELECT f FROM Lists f WHERE (:priority IS NULL OR f.priority = :priority) " +
-            "AND (:creationDate IS NULL OR f.creationDate = :creationDate) " +
-            "AND (:finishDate IS NULL OR f.finishDate = :finishDate)" +
-            "AND (:title IS NULL OR f.title = :title LIKE %:title%)" +
-            "AND (:creationDate IS NULL OR :finishDate IS NULL OR f.creationDate BETWEEN :creationDate AND :finishDate)")
+    @Query("SELECT f FROM Items f WHERE (:priority IS NULL OR f.priority = :priority) " +
+            "AND (:creationDate IS NULL OR f.creationDate >= :creationDate) " +
+            "AND (:finishDate IS NULL OR f.finishDate <= :finishDate) " +
+            "AND (:title IS NULL OR f.title LIKE %:title%)")
     Page<Lists> findByFilters(@Param("priority") Priority priority, @Param("creationDate")LocalDateTime creationDate,
             @Param("finishDate") LocalDateTime finishDate, @Param("title") String title, Pageable pageable);
 }

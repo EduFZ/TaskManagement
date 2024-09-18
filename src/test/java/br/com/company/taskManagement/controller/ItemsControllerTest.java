@@ -1,13 +1,10 @@
 package br.com.company.taskManagement.controller;
 
 import br.com.company.taskManagement.dto.ItemsDto;
-import br.com.company.taskManagement.dto.ListsDto;
 import br.com.company.taskManagement.entity.Items;
-import br.com.company.taskManagement.entity.Lists;
 import br.com.company.taskManagement.enums.Priority;
 import br.com.company.taskManagement.exception.ExceptionMessage;
 import br.com.company.taskManagement.service.ItemsService;
-import br.com.company.taskManagement.service.ListsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -59,30 +54,6 @@ class ItemsControllerTest {
         return ItemsDto.builder()
                 .title("Title Test")
                 .description("Some Description")
-                .build();
-    }
-
-    private Lists buildListsMock() {
-        return Lists.builder()
-                .id(1L)
-                .title("Title Test")
-                .description("Some Description")
-                .items(new ArrayList<>(Arrays.asList(Items.builder()
-                        .id(2L)
-                        .title("Title Test")
-                        .description("Some Description")
-                        .build())))
-                .build();
-    }
-
-    private ListsDto buildListsDtoMock() {
-        return ListsDto.builder()
-                .title("Title Test")
-                .description("Some Description")
-                .itemsDto(new ArrayList<>(Arrays.asList(ItemsDto.builder()
-                        .title("Title Test")
-                        .description("Some Description")
-                        .build())))
                 .build();
     }
 
