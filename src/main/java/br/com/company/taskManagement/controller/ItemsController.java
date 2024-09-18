@@ -49,7 +49,7 @@ public class ItemsController {
         return ResponseEntity.ok(itemsService.findByFilters(priority, creationDate, finishDate, title, pageable));
     }
 
-    @PostMapping("createItems")
+    @PostMapping("createItems/{id}")
     public ResponseEntity<?> createLists(@PathVariable Long id, @RequestBody ItemsDto itemsDto) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(itemsService.createItems(id, itemsDto));
