@@ -81,7 +81,7 @@ public class ItemsController {
         }
     }
 
-    @DeleteMapping("/deleteLists/{id}")
+    @DeleteMapping("/deleteItems/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody Items items) {
         try {
             itemsService.delete(id, items);

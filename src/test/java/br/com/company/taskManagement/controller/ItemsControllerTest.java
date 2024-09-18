@@ -32,8 +32,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ItemsController.class)
 class ItemsControllerTest {
@@ -118,6 +117,23 @@ class ItemsControllerTest {
     }
 
     @Test
+    void shouldReturnStatusOkWhenFindAllByLists() throws Exception {
+        Items items = buildItemsMock();
+
+        Page<Items> itemsPage = new PageImpl<>(Collections.singletonList(items));
+
+        when(itemsService.findAllByLists(anyLong(), any(Pageable.class))).thenReturn(itemsPage);
+
+        mvc.perform(get("/items/listItems/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].id").value(items.getId()))
+                .andExpect(jsonPath("$.content[0].title").value(items.getTitle()));
+    }
+
+    @Test
     void shouldReturnStatusOkWhenFindByFilters() throws Exception {
         Items items = buildItemsMock();
 
@@ -171,114 +187,114 @@ class ItemsControllerTest {
                 .andExpect(content().string("Invalid data"));
     }
 
-//    @Test
-//    void shouldReturnStatusInternalServerErrorWhenCreateLists() throws Exception {
-//        ListsDto listsDto = buildListsDtoMock();
-//
-//        when(itemsService.createLists(any(ListsDto.class))).thenThrow(new RuntimeException("Exception"));
-//
-//        mvc.perform(post("/lists/createLists")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(listsDto)))
-//                .andExpect(status().isInternalServerError())
-//                .andExpect(content().string("Exception"));
-//    }
-//
-//    @Test
-//    void shouldReturnStatusOkWhenPutLists() throws Exception {
-//        ListsDto listsDto = buildListsDtoMock();
-//        Lists lists = buildListsMock();
-//
-//        when(itemsService.putLists(anyLong(), any(ListsDto.class))).thenReturn(lists);
-//
-//        mvc.perform(put("/lists/putLists/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(listsDto)))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json(objectMapper.writeValueAsString(lists)));
-//    }
-//
-//    @Test
-//    void shouldReturnExceptionMessageWhenPutLists() throws Exception {
-//        ListsDto listsDto = buildListsDtoMock();
-//        listsDto.setTitle("Titl");
-//
-//        when(itemsService.putLists(anyLong(), any(ListsDto.class))).thenThrow(new ExceptionMessage("ExceptionMessage"));
-//
-//        mvc.perform(put("/lists/putLists/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(listsDto)))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string("ExceptionMessage"));
-//    }
-//
-//    @Test
-//    void shouldReturnStatusInternalServerErrorWhenPutLists() throws Exception {
-//        ListsDto listsDto = buildListsDtoMock();
-//
-//        when(itemsService.putLists(anyLong(), any(ListsDto.class))).thenThrow(new RuntimeException("Exception"));
-//
-//        mvc.perform(put("/lists/putLists/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(listsDto)))
-//                .andExpect(status().isInternalServerError())
-//                .andExpect(content().string("Exception"));
-//    }
-//
-//    @Test
-//    void shouldReturnStatusNoContentWhenDeleteById() throws Exception {
-//        doNothing().when(itemsService).deleteById(anyLong());
-//
-//        mvc.perform(delete("/lists/delete/1"))
-//                .andExpect(status().isNoContent());
-//    }
-//
-//    @Test
-//    void shouldReturnStatusInternalServerErrorWhenDeleteById() throws Exception {
-//        doThrow(new RuntimeException("Exception")).when(itemsService).deleteById(1L);
-//
-//        mvc.perform(delete("/lists/delete/1"))
-//                .andExpect(status().isInternalServerError())
-//                .andExpect(content().string("Exception"));
-//    }
-//
-//    @Test
-//    void shouldReturnStatusNoContentWhenDelete() throws Exception {
-//        Lists lists = buildListsMock();
-//
-//        doNothing().when(itemsService).delete(anyLong(), any(Lists.class));
-//
-//        mvc.perform(delete("/lists/deleteLists/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(lists)))
-//                .andExpect(status().isNoContent());
-//    }
-//
-//    @Test
-//    void shouldReturnStatusBadRequestWhenDelete() throws Exception {
-//        Lists lists = buildListsMock();
-//
-//        doThrow(new ExceptionMessage("ExceptionMessage")).when(itemsService).delete(anyLong(), any(Lists.class));
-//
-//        mvc.perform(delete("/lists/deleteLists/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(lists)))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string("ExceptionMessage"));
-//    }
-//
-//    @Test
-//    void shouldReturnStatusInternalServerErrorWhenDelete() throws Exception {
-//        Lists lists = buildListsMock();
-//
-//        doThrow(new RuntimeException("Exception")).when(itemsService).delete(anyLong(), any(Lists.class));
-//
-//        mvc.perform(delete("/lists/deleteLists/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(lists)))
-//                .andExpect(status().isInternalServerError())
-//                .andExpect(content().string("Exception"));
-//    }
+    @Test
+    void shouldReturnStatusInternalServerErrorWhenCreateLists() throws Exception {
+        ItemsDto itemsDto = buildItemsDtoMock();
+
+        when(itemsService.createItems(anyLong(), any(ItemsDto.class))).thenThrow(new RuntimeException("Exception"));
+
+        mvc.perform(post("/items/createItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemsDto)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Exception"));
+    }
+
+    @Test
+    void shouldReturnStatusOkWhenPutLists() throws Exception {
+        ItemsDto itemsDto = buildItemsDtoMock();
+        Items items = buildItemsMock();
+
+        when(itemsService.putItems(anyLong(), any(ItemsDto.class))).thenReturn(items);
+
+        mvc.perform(put("/items/putItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemsDto)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(items)));
+    }
+
+    @Test
+    void shouldReturnExceptionMessageWhenPutLists() throws Exception {
+        ItemsDto itemsDto = buildItemsDtoMock();
+        itemsDto.setTitle("Titl");
+
+        when(itemsService.putItems(anyLong(), any(ItemsDto.class))).thenThrow(new ExceptionMessage("ExceptionMessage"));
+
+        mvc.perform(put("/items/putItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemsDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("ExceptionMessage"));
+    }
+
+    @Test
+    void shouldReturnStatusInternalServerErrorWhenPutLists() throws Exception {
+        ItemsDto itemsDto = buildItemsDtoMock();
+
+        when(itemsService.putItems(anyLong(), any(ItemsDto.class))).thenThrow(new RuntimeException("Exception"));
+
+        mvc.perform(put("/items/putItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemsDto)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Exception"));
+    }
+
+    @Test
+    void shouldReturnStatusNoContentWhenDeleteById() throws Exception {
+        doNothing().when(itemsService).deleteById(anyLong());
+
+        mvc.perform(delete("/items/delete/1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnStatusInternalServerErrorWhenDeleteById() throws Exception {
+        doThrow(new RuntimeException("Exception")).when(itemsService).deleteById(1L);
+
+        mvc.perform(delete("/items/delete/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Exception"));
+    }
+
+    @Test
+    void shouldReturnStatusNoContentWhenDelete() throws Exception {
+        Items items = buildItemsMock();
+
+        doNothing().when(itemsService).delete(anyLong(), any(Items.class));
+
+        mvc.perform(delete("/items/deleteItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(items)))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnStatusBadRequestWhenDelete() throws Exception {
+        Items items = buildItemsMock();
+
+        doThrow(new ExceptionMessage("ExceptionMessage")).when(itemsService).delete(anyLong(), any(Items.class));
+
+        mvc.perform(delete("/items/deleteItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(items)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("ExceptionMessage"));
+    }
+
+    @Test
+    void shouldReturnStatusInternalServerErrorWhenDelete() throws Exception {
+        Items items = buildItemsMock();
+
+        doThrow(new RuntimeException("Exception")).when(itemsService).delete(anyLong(), any(Items.class));
+
+        mvc.perform(delete("/items/deleteItems/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(items)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Exception"));
+    }
 
 
 }
